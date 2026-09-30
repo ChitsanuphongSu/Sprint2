@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gaming Statistics Dashboard — Sprint 2 Report</title>
+<style>
+:root{--bg:#0b0f1c;--panel:#151b2f;--line:#26304f;--tx:#e8ecf8;--mut:#93a0c4;--cy:#3ddcff;--am:#ffb648;--gr:#5be3a0;--rd:#ff7a7a;box-sizing:border-box}
+*{box-sizing:inherit;margin:0}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:"Noto Sans Thai","Sarabun","Segoe UI",system-ui,sans-serif;overflow:hidden}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+#stage{width:min(100vw,calc((100vh - 44px)*1.7778));aspect-ratio:16/9;container-type:inline-size;position:relative;background:radial-gradient(120cqw 70cqw at 90% -10%,#1b2a5a 0,transparent 60%),var(--bg)}
+.s{position:absolute;inset:0;padding:4.2cqw 5cqw;display:none;flex-direction:column;font-size:1.7cqw}
+.s.on{display:flex}
+h1{font-size:6cqw;line-height:1.1;font-weight:800}
+h2{font-size:3.3cqw;font-weight:800;margin-bottom:.4cqw}
+.sub{color:var(--mut);font-size:1.7cqw;margin-bottom:2.2cqw}
+.acc{color:var(--cy)}
+.grid{display:grid;gap:1.4cqw;flex:1;min-height:0;align-content:start}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:1cqw;padding:1.4cqw 1.6cqw}
+.card b{display:block;font-size:1.9cqw;margin-bottom:.6cqw}
+.card.c{border-left:.35cqw solid var(--cy)}.card.a{border-left:.35cqw solid var(--am)}.card.g{border-left:.35cqw solid var(--gr)}
+.card li,.card p{color:var(--mut);line-height:1.5}
+.card ul{padding-left:1.6cqw}
+.flow{display:flex;align-items:center;gap:.8cqw;margin-top:1.5cqw}
+.node{background:var(--panel);border:1.5px solid var(--cy);border-radius:.9cqw;padding:1.2cqw .8cqw;text-align:center;flex:1;font-weight:700}
+.node small{display:block;color:var(--mut);font-weight:400;font-size:1.25cqw;margin-top:.4cqw;line-height:1.4}
+.node.am{border-color:var(--am)}.node.gr{border-color:var(--gr)}.node.rd{border-color:var(--rd)}
+.ar{color:var(--cy);font-size:2.4cqw;flex:none}
+.stack{display:flex;flex-direction:column;gap:.8cqw;flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:.7cqw;margin-top:1.2cqw}
+.chip{border:1px solid var(--line);background:#101830;border-radius:99cqw;padding:.5cqw 1.3cqw;color:var(--tx)}
+table{width:100%;border-collapse:collapse}
+td{padding:.75cqw 1cqw;border-bottom:1px solid var(--line)}
+td:first-child{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--cy);white-space:nowrap;width:34%}
+td:last-child{color:var(--mut)}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--am)}
+.warn{border-left:.35cqw solid var(--am)}
+#bar{height:44px;display:flex;gap:10px;align-items:center;color:var(--mut);font-size:14px}
+#bar button{background:var(--panel);color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:6px 14px;cursor:pointer;font:inherit}
+#bar button:focus-visible{outline:2px solid var(--cy)}
+</style></head><body>
+<div id="stage">
+
+<section class="s on" style="justify-content:center">
+<div class="sub" style="font-size:2cqw;color:var(--cy)">Final Term Project · CP352301 Script Programming</div>
+<h1>Gaming Statistics<br><span class="acc">Dashboard</span></h1>
+<p style="font-size:2.6cqw;margin-top:2cqw">Sprint 2 Report</p>
+<p class="sub" style="margin-top:.6cqw">Web UI, API Integration &amp; Database · 20–24 กันยายน 2569</p>
+<div class="chips"><span class="chip">Sprint 1 ✅ Completed</span><span class="chip">Sprint 2 ✅ Completed</span></div>
+</section>
+
+<section class="s">
+<h2>Sprint 2: จาก CLI สู่ Web Application</h2>
+<p class="sub">ต่อยอดจาก Sprint 1 — ให้ใช้งานผ่าน Web Browser พร้อมข้อมูลจริงจาก External API</p>
+<div class="flow" style="margin:0 0 2cqw"><div class="node am">Sprint 1<small>Command Line Interface</small></div><span class="ar">→</span><div class="node">Sprint 2<small>Streamlit Web Application</small></div></div>
+<div class="grid g3">
+<div class="card c"><b>Web UI</b><p>Streamlit Dashboard และ Sidebar Navigation</p></div>
+<div class="card c"><b>External APIs</b><p>RAWG (ข้อมูลเกม) และ Steam (จำนวนผู้เล่นปัจจุบัน)</p></div>
+<div class="card c"><b>SQLite Database</b><p>จัดเก็บข้อมูลเกมและ Snapshot</p></div>
+<div class="card g"><b>Data Processing</b><p>Normalize ข้อมูลจาก RAWG</p></div>
+<div class="card g"><b>Service Layer</b><p>แยก Application Logic ออกจาก UI และ API</p></div>
+<div class="card g"><b>Search · Pagination · Testing</b><p>Game Library, Genres, Top Rated, Live Players, Game Detail, Automated Tests</p></div>
+</div></section>
+
+<section class="s">
+<h2>System Architecture</h2>
+<p class="sub">UI ไม่ติดต่อ API โดยตรง — ทุกอย่างผ่าน Game Service</p>
+<div class="flow">
+<div class="node">Web Browser</div><span class="ar">→</span>
+<div class="node">Streamlit UI<small>Dashboard</small></div><span class="ar">→</span>
+<div class="node am">Game Service<small>Service Layer</small></div><span class="ar">→</span>
+<div class="stack"><div class="node gr">RAWG API</div><div class="node gr">Steam API</div></div><span class="ar">→</span>
+<div class="node">Data Processing<small>Normalize</small></div><span class="ar">→</span>
+<div class="node am">SQLite<small>Local Database</small></div>
+</div>
+<div class="grid g3" style="margin-top:2.2cqw;flex:none">
+<div class="card c"><b>Streamlit</b><p>แสดงหน้า Dashboard ให้ผู้ใช้</p></div>
+<div class="card a"><b>Game Service</b><p>ศูนย์กลางเรียก RAWG, Steam, Processing และ SQLite</p></div>
+<div class="card g"><b>SQLite</b><p>เก็บข้อมูลเกมและ Live Player Snapshot</p></div>
+</div></section>
+
+<section class="s">
+<h2>Project Structure / Modules</h2>
+<p class="sub">แยกความรับผิดชอบเป็นชั้น: API · Database · Service · Data Processing · Components</p>
+<div class="card"><table>
+<tr><td>src/app.py</td><td>Entry Point ของ Streamlit — <code>streamlit run src/app.py</code></td></tr>
+<tr><td>src/api/rawg_api.py</td><td>RAWG API Client — Fetch, Search, Pagination, Error Handling</td></tr>
+<tr><td>src/api/steam_api.py</td><td>Steam API — App ID Matching, Player Count, Top Games</td></tr>
+<tr><td>src/database/database.py</td><td>SQLite — Games Table, Metadata, Insert / Update / Search</td></tr>
+<tr><td>src/services/game_service.py</td><td>Service Layer — Import, Refresh, Dashboard-ready Data</td></tr>
+<tr><td>src/utils/data_processing.py</td><td>Normalize ข้อมูลจาก RAWG</td></tr>
+<tr><td>src/utils/time_utils.py</td><td>Time Utilities — UTC / Thailand Time</td></tr>
+<tr><td>src/components/dashboard.py</td><td>Render หน้าต่าง ๆ ของ Dashboard</td></tr>
+</table></div></section>
+
+<section class="s">
+<h2>API Integration &amp; Data Processing</h2>
+<p class="sub">Raw API Data ถูกจัดรูปแบบก่อนบันทึกลง Database</p>
+<div class="flow" style="margin:0 0 1.6cqw"><div class="node gr">API Response<small>JSON Validation</small></div><span class="ar">→</span><div class="node">Data Processing<small>Normalize</small></div><span class="ar">→</span><div class="node am">SQLite</div></div>
+<div class="grid g3" style="flex:none">
+<div class="card c"><b>RAWG Fields</b><ul><li>name · rating · released</li><li>genres · platforms</li><li>metacritic · ratings_count</li><li>image · game_id</li></ul></div>
+<div class="card g"><b>Processing</b><ul><li>Type Conversion (Integer / Float)</li><li>Normalize Genres &amp; Platforms</li><li>Missing Value Handling</li><li>Remove Duplicate Values</li></ul></div>
+<div class="card a"><b>Steam</b><ul><li>Exact Name Matching → App ID</li><li>Current Players · Top 100</li><li>Snapshot, Refresh 15 นาที</li></ul></div>
+</div>
+<p style="margin-top:1.6cqw;color:var(--mut)"><code>[{"name":"Action"},{"name":"RPG"}]</code> &nbsp;→&nbsp; <code>["Action","RPG"]</code></p>
+</section>
+
+<section class="s">
+<h2>SQLite Database</h2>
+<p class="sub">Local Database ของ Application — เชื่อมผ่าน Game Service</p>
+<div class="grid g3">
+<div class="card c"><b>games</b><p>ข้อมูลเกมจาก RAWG + <code>steam_app_id</code>, <code>steam_lookup_status</code>, <code>current_players</code>, <code>live_rank</code> และเวลาอัปเดต</p></div>
+<div class="card a"><b>dashboard_metadata</b><p>เก็บเวลา Refresh ล่าสุดของ players, catalog, live top เพื่อควบคุม Refresh Interval</p></div>
+<div class="card g"><b>Operations</b><ul><li>Insert / Update / Read / Search</li><li>Check Existing Game</li><li>Steam App Mapping</li><li>Save / Read Live Top Games</li></ul></div>
+</div>
+<div class="card warn" style="margin-top:1.4cqw"><b>ทำไมต้อง Snapshot</b><p>ไม่เรียก Steam API ทุกครั้งที่เปิดหน้า — ผู้ใช้หลายคนอ่านจาก Snapshot เดียวกัน ลดจำนวน API Requests</p></div>
+</section>
+
+<section class="s">
+<h2>Web Dashboard Features</h2>
+<p class="sub">Navigation: Home · Game Library · Search · Genres · Top Rated · Live Players (+ Game Detail)</p>
+<div class="grid g3">
+<div class="card c"><b>🎮 Game Library</b><p>Game Cards จาก SQLite · Filter Genre / Platform / Minimum Rating</p></div>
+<div class="card c"><b>🔎 Search</b><p>ค้นหาใน SQLite ก่อน แล้วเรียก RAWG ถ้าไม่พบ</p></div>
+<div class="card c"><b>🗂 Genres</b><p>จัดกลุ่มเกมตาม Genre — เกมหนึ่งอยู่ได้หลาย Genre</p></div>
+<div class="card a"><b>⭐ Top Rated</b><p>เรียงจาก Rating สูงไปต่ำ</p></div>
+<div class="card a"><b>👤 Live Players</b><p>Steam Top 100 เรียงตามจำนวนผู้เล่นปัจจุบัน พร้อมเวลาอัปเดต</p></div>
+<div class="card a"><b>📋 Game Detail</b><p>Rating, Steam Players Now, Release, Platforms, Metacritic, Genres</p></div>
+</div>
+<div class="chips"><span class="chip">📄 Pagination 50 เกม/หน้า</span><span class="chip">Home: Popular Games</span><span class="chip">ไม่มีข้อมูล Steam → แสดง N/A</span></div>
+</section>
+
+<section class="s">
+<h2>Search Flow: ระบบทำงานอย่างไร</h2>
+<p class="sub">ค้นหาจาก SQLite ก่อน — เรียก API เฉพาะเมื่อไม่พบ</p>
+<div class="flow"><div class="node">User Search</div><span class="ar">→</span><div class="node">SQLite Search</div><span class="ar">→</span><div class="node am">พบข้อมูล?</div></div>
+<div class="grid g2" style="margin-top:2cqw;flex:none">
+<div class="card g"><b>Yes</b><div class="flow" style="margin:0"><div class="node gr">Show Results</div></div></div>
+<div class="card rd" style="border-left:.35cqw solid var(--rd)"><b>No</b><div class="flow" style="margin:0"><div class="node">RAWG API</div><span class="ar">→</span><div class="node">Save SQLite</div><span class="ar">→</span><div class="node gr">Display</div></div></div>
+</div>
+<p style="margin-top:1.8cqw;color:var(--mut)">ผลจาก RAWG รองรับ Pagination · ไม่พบ → “No matching games”</p>
+</section>
+
+<section class="s">
+<h2>Testing / QA — Coverage</h2>
+<p class="sub">Automated Tests (pytest) ครอบคลุมหลาย Layer · ใช้ Mock ในการทดสอบ API</p>
+<div class="grid g3" style="flex:none">
+<div class="card c"><b>RAWG API</b><p>Response, API Key, Search, Pagination, HTTP / Network Error</p></div>
+<div class="card c"><b>Steam API</b><p>App ID Matching, Player Count, Connection Error, Invalid Response, Top Games</p></div>
+<div class="card c"><b>Database</b><p>Table, Insert, Read, Search, Duplicate, Metadata, Live Snapshot</p></div>
+<div class="card g"><b>Game Service</b><p>Search, Import, Catalog, Steam Live Data, Pagination</p></div>
+<div class="card g"><b>Data Processing</b><p>Game ID, Rating, Genres, Platforms, Missing Values</p></div>
+<div class="card g"><b>Time · Dashboard</b><p>UTC / Thailand Time · Genre Page, Timestamp Display</p></div>
+</div>
+<div class="card warn" style="margin-top:1.4cqw"><b>QA Result (Review Environment)</b>
+<p>Core / API / Database / Service Tests: <b style="display:inline;color:var(--gr)">40 Passed</b> · Compilation Check: Passed<br>Dashboard Tests: ยังรันไม่ครบ (Environment ไม่มี <code>streamlit</code>) — ยังไม่สรุปว่าผ่านทั้ง Suite</p></div>
+</section>
+
+<section class="s">
+<h2>Sprint 2 Deliverables</h2>
+<p class="sub">ตาม Sprint Progress และ Definition of Done</p>
+<div class="grid g3">
+<div class="card c"><b>Web Application</b><p>Streamlit Dashboard, Navigation, Home, Game Library, Search, Genres, Top Rated, Live Players, Game Detail</p></div>
+<div class="card c"><b>API &amp; Data</b><p>RAWG API (Search, Pagination), Steam API (Current Players, Top 100), Data Processing</p></div>
+<div class="card c"><b>Database &amp; Service</b><p>SQLite, Games + Metadata Tables, Live Player Snapshot, Refresh Interval, Game Service</p></div>
+<div class="card g"><b>Reliability</b><p>Error Handling, Empty State, Pagination, Environment Configuration</p></div>
+<div class="card g"><b>Testing</b><p>Automated Tests Implemented · Full Suite ต้อง Verify ใน Environment ที่ติดตั้ง Streamlit ครบ</p></div>
+<div class="card g"><b>Documentation</b><p>Sprint 2 Report, Change Log, Learning Log, Project Plan, README</p></div>
+</div></section>
+
+<section class="s">
+<h2>Team &amp; Responsibilities</h2>
+<p class="sub">ทำงานตาม Role ตลอด 5 วัน (20–24 ก.ย. 2569)</p>
+<div class="grid g3">
+<div class="card a"><b>ฟลุ๊ค — Planner</b><p>Sprint Planning, Scope, Requirements, Architecture, Documentation และติดตามความคืบหน้า</p></div>
+<div class="card c"><b>ออม — Coder</b><p>Web Application, Streamlit UI, RAWG API, Steam API, SQLite และ Application Logic</p></div>
+<div class="card g"><b>คิม — Debugger / QA</b><p>Testing, QA, Edge Cases, Error Checking และ Bug Verification</p></div>
+</div></section>
+
+<section class="s" style="justify-content:center">
+<h2 style="font-size:4cqw">Sprint 2 established the <span class="acc">Web Application</span> foundation.</h2>
+<p class="sub" style="margin-top:1.4cqw">CLI → Streamlit → RAWG / Steam API → Data Processing → SQLite → Dashboard</p>
+<div class="chips"><span class="chip">Next: Sprint 3 — Data Processing, Statistics &amp; Visualization</span></div>
+<p style="margin-top:2.4cqw;color:var(--mut)">ขอบคุณครับ · Q&amp;A</p>
+</section>
+
+</div>
+<div id="bar"><button id="p" aria-label="Previous slide">◀</button><span id="n"></span><button id="x" aria-label="Next slide">▶</button><span>← → เปลี่ยนสไลด์</span></div>
+<script>
+var S=[].slice.call(document.querySelectorAll('.s')),i=0;
+function go(k){i=Math.max(0,Math.min(S.length-1,k));S.forEach(function(e,j){e.classList.toggle('on',j===i)});document.getElementById('n').textContent=(i+1)+' / '+S.length;try{location.hash=i+1}catch(e){}}
+document.getElementById('p').onclick=function(){go(i-1)};document.getElementById('x').onclick=function(){go(i+1)};
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown')go(i+1);if(e.key==='ArrowLeft'||e.key==='PageUp')go(i-1)});
+go((parseInt(location.hash.slice(1))||1)-1);
+</script></body></html>
